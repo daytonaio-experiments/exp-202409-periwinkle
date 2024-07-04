@@ -19,7 +19,7 @@ def convert_to_gherkin(text):
     try:
 
         prompt = (
-            "Convert the following text to Gherkin syntax. "
+            "Convert the following text to Gherkin syntax."
             "Make sure to include Feature, Scenario, Given, When, Then, And, But statements.\n"
             f"Text: {text}\n"
             "Gherkin:"
