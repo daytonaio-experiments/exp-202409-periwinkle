@@ -17,8 +17,10 @@ client = AzureOpenAI(
 
 def convert_to_gherkin(text):
     try:
+
         prompt = (
-            "Convert the following text to Gherkin syntax:\n"
+            "Convert the following text to Gherkin syntax. "
+            "Make sure to include Feature, Scenario, Given, When, Then, And, But statements.\n"
             f"Text: {text}\n"
             "Gherkin:"
         )
@@ -29,9 +31,8 @@ def convert_to_gherkin(text):
                 {"role": "system", "content": "You are an AI assistant that converts text to Gherkin syntax."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
-            max_tokens=250,
-            stop=["\n"] 
+            temperature=0.6,
+            max_tokens=400,
         )
 
         gherkin_text = response.choices[0].message.content.strip()
