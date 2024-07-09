@@ -1,0 +1,20 @@
+Instructions for Writing a Prompt
+
+Welcome! To help you get the best results, please follow these instructions when entering a prompt.
+
+Instructions for Inputting a Prompt:
+
+1. Purpose: Create a prompt that guides an AI to generate BDD scenarios based on a given user story.
+
+2. Format: Use the provided format for your prompt:
+   - Start with a clear description of the task.
+   - Include specific conditions or scenarios.
+   - Optionally, provide examples or additional details.
+
+3. Key Elements: Ensure your prompt includes:
+   - Clear description of desired outcome.
+   - Relevant details (e.g., user roles, actions, expected results).
+   - Specify any required format or syntax.
+
+4. Example:
+As a user, I want to log in to my account so that I can access personalized content.
