@@ -15,7 +15,7 @@ client = AzureOpenAI(
     api_version="2024-05-01-preview"
 )
 
-def convert_to_gherkin(text):
+def convert_user_input_text_to_gherkin(text):
     try:
 
         prompt = (
@@ -40,8 +40,8 @@ def convert_to_gherkin(text):
             max_tokens=2000,
         )
 
-        gherkin_text = response.choices[0].message.content.strip()
-        return gherkin_text
+        gherkin_scenarios = response.choices[0].message.content.strip()
+        return gherkin_scenarios
 
     except Exception as ex:
         print(f"Error in converting text to Gherkin: {ex}")
@@ -52,7 +52,7 @@ def modify_gherkin_scenario(scenarios, edit_instructions):
         prompt = (
             f"Modify the following Gherkin scenarios: \n {scenarios} based on these instructions:\n"
             f"Instructions: {edit_instructions}"
-             "After modifying, removing and keepring scenarios please also number each scenario. \n"
+             "After modifying, removing and keeping scenarios please also number each scenario. \n"
         )
 
         response = client.chat.completions.create(
