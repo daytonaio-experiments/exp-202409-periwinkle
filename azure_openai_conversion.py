@@ -46,3 +46,30 @@ def convert_to_gherkin(text):
     except Exception as ex:
         print(f"Error in converting text to Gherkin: {ex}")
         return None
+
+def modify_gherkin_scenario(scenarios, edit_instructions):
+    try:
+        prompt = (
+            f"Modify the following Gherkin scenarios: \n {scenarios} based on these instructions:\n"
+            f"Instructions: {edit_instructions}"
+             "After modifying, removing and keepring scenarios please also number each scenario. \n"
+        )
+
+        response = client.chat.completions.create(
+            model=deployment,
+            messages=[
+                {"role": "system", "content": "You are an AI assistant specialized in "
+                                              "editing BDD scenarios. Your task is to modify given Gherkin scenarios "
+                                              "based on user instructions."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.6,
+            max_tokens=2000,
+        )
+
+        modified_scenarios = response.choices[0].message.content.strip()
+        return modified_scenarios
+
+    except Exception as ex:
+        print(f"Error in modifying scenarios: {ex}")
+        return None
