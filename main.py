@@ -2,7 +2,7 @@ from azure_openai_conversion import convert_user_input_text_to_gherkin
 from scenario_operations import save_gherkin_scenarios_to_markdown, edit_scenarios
 
 if __name__ == "__main__":
-    input_text = input("Enter text to convert to BDD scenarios (Gherkin): ")
+    input_text = input("Enter user story to convert to BDD scenarios (Gherkin): ")
     gherkin_output_scenarios = convert_user_input_text_to_gherkin(input_text)
     
     if gherkin_output_scenarios:

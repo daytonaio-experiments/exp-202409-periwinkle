@@ -14,7 +14,8 @@ Instructions for Inputting a Prompt:
 3. Key Elements: Ensure your prompt includes:
    - Clear description of desired outcome.
    - Relevant details (e.g., user roles, actions, expected results).
-   - Specify any required format or syntax.
 
 4. Example:
+As a [type of user], I want [an action] so that [a benefit/a value]
 As a user, I want to log in to my account so that I can access personalized content.
+As a web surfer, I want to search Google, so that I can learn new things.
