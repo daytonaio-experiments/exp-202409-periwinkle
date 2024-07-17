@@ -2,6 +2,7 @@ from azure_openai_conversion import convert_user_input_text_to_gherkin
 from scenario_operations import save_gherkin_scenarios_to_markdown, edit_scenarios
 
 if __name__ == "__main__":
+    project_name = input("Enter the project name: ")
     input_text = input("Enter text to convert to BDD scenarios (Gherkin): ")
     gherkin_output_scenarios = convert_user_input_text_to_gherkin(input_text)
     
@@ -17,9 +18,9 @@ if __name__ == "__main__":
                     print("\nModified scenarios:\n", modified_scenarios)
                     save_choice = input("Do you want to save the modified scenarios? (yes/no): ").lower()
                     if save_choice == "yes":
-                        filename = input("Enter the filename to save the modified Gherkin scenario (e.g., scenario1.feature): ")
-                        save_gherkin_scenarios_to_markdown(modified_scenarios, filename, directory="gherkin_scenarios")
-                        print(f"Modified scenarios saved to 'gherkin_scenarios/{filename}'")
+                        filename = input("Enter the filename to save the modified Gherkin scenario (e.g., user_story.feature): ")
+                        save_gherkin_scenarios_to_markdown(modified_scenarios, filename, project_name)
+                        print(f"Modified scenarios saved to '{project_name}/{filename}'")
                         break
                     else:
                         print("Continuing with scenario modification...")
@@ -28,8 +29,8 @@ if __name__ == "__main__":
                     print("Failed to modify the scenarios.")
                     break
         else:
-            filename = input("Enter the filename to save the Gherkin scenario (e.g., scenario1.feature): ")
-            save_gherkin_scenarios_to_markdown(gherkin_output_scenarios, filename)
-            print(f"Scenarios saved to 'gherkin_scenarios/{filename}'")
+            filename = input("Enter the filename to save the Gherkin scenario (e.g., user_story.feature): ")
+            save_gherkin_scenarios_to_markdown(gherkin_output_scenarios, filename, project_name)
+            print(f"Scenarios saved to '{project_name}/{filename}'")
     else:
         print("Failed to generate Gherkin.")

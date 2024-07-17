@@ -1,7 +1,7 @@
 import os
 from azure_openai_conversion import modify_gherkin_scenario
 
-def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory="gherkin_scenarios"):
+def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory):
     try:
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -13,7 +13,6 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory="gherki
         feature_added = False
 
         for line in lines:
-            # Ignore lines that are not part of Gherkin syntax
             if line.startswith("Certainly!") or line.startswith("Sure,"):
                 continue
 
