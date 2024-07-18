@@ -1,5 +1,6 @@
 import os
 from azure_openai_conversion import modify_gherkin_scenario
+from qdrant_operations import search_similar_scenarios
 
 def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory):
     try:
@@ -43,8 +44,20 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory):
 def edit_scenarios(scenarios):
     try:
         if scenarios:
+            edit_choice = input("Do you want to search for similar scenarios? (yes/no): ").lower()
+            if edit_choice == "yes":
+                query = input("Enter the scenario text to find similar scenarios: ").strip()
+                similar_scenarios = search_similar_scenarios(query)
 
-            edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
+                for hit in similar_scenarios:
+                    gherkin_scenario = hit.payload['gherkin_scenario']
+                    formatted_scenario = format_gherkin_scenario(gherkin_scenario)
+    
+                    print(f"Similarity Score: {hit.score}\nScenario:\n{formatted_scenario}")
+
+                edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
+            else:
+                edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
 
             modified_scenarios = modify_gherkin_scenario(scenarios, edit_instructions)
             
@@ -60,3 +73,13 @@ def edit_scenarios(scenarios):
     except Exception as ex:
         print(f"Error editing scenarios: {ex}")
         return None
+    
+def format_gherkin_scenario(gherkin_scenario):
+    formatted_lines = []
+    lines = gherkin_scenario.splitlines()
+    for line in lines:
+        if line.startswith("Given"):
+            if formatted_lines:
+                formatted_lines.append("")
+        formatted_lines.append(line)
+    return "\n".join(formatted_lines)
