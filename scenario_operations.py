@@ -41,20 +41,23 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, directory):
     except Exception as ex:
         print(f"Error in saving Gherkin to Markdown: {ex}")
 
-def edit_scenarios(scenarios):
+def edit_scenarios(scenarios, user_input):
     try:
         if scenarios:
             edit_choice = input("Do you want to search for similar scenarios? (yes/no): ").lower()
             if edit_choice == "yes":
-                query = input("Enter the scenario text to find similar scenarios: ").strip()
-                similar_scenarios = search_similar_scenarios(query)
+                # query = input("Enter the scenario text to find similar scenarios: ").strip()
+                similar_scenarios = search_similar_scenarios(user_input)
 
                 for hit in similar_scenarios:
-                    gherkin_scenario = hit.payload['gherkin_scenario']
-                    formatted_scenario = format_gherkin_scenario(gherkin_scenario)
-    
-                    print(f"Similarity Score: {hit.score}\nScenario:\n{formatted_scenario}")
+                    if hit.score >= 0.70:
+                        gherkin_scenario = hit.payload['gherkin_scenario']
+                        formatted_scenario = format_gherkin_scenario(gherkin_scenario)
+                        print(f"Similarity Score: {hit.score}\nScenario:\n{formatted_scenario}")
+                        found_similar_scenario = True
 
+                if not found_similar_scenario:
+                        print("There are no similar scenarios.")
                 edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
             else:
                 edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()

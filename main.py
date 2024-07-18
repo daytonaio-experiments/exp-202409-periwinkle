@@ -5,7 +5,13 @@ from qdrant_operations import save_scenario_to_qdrant
 if __name__ == "__main__":
 
     project_name = input("Enter the project name: ")
-    input_text = input("Enter text to convert to BDD scenarios (Gherkin): ")
+
+    print("Enter text to convert to BDD scenarios (Gherkin):")
+    print("Examples:")
+    print("  - As a [type of user], I want [an action] so that [a benefit/a value]")
+    print("  - As a user, I want to log in to my account so that I can access personalized content.")
+    input_text = input("> ")
+
     gherkin_output_scenarios = convert_user_input_text_to_gherkin(input_text)
     
     if gherkin_output_scenarios:
@@ -15,7 +21,7 @@ if __name__ == "__main__":
         if edit_choice == "yes":
             scenarios = gherkin_output_scenarios
             while True:
-                modified_scenarios = edit_scenarios(scenarios)
+                modified_scenarios = edit_scenarios(scenarios, input_text)
                 
                 if modified_scenarios:
                     print("\nModified scenarios:\n", modified_scenarios)
