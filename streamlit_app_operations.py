@@ -1,3 +1,4 @@
+import streamlit as st
 import os
 from azure_openai_conversion import modify_gherkin_scenario
 from qdrant_operations import search_similar_scenarios
@@ -43,48 +44,41 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, project_name):
         with open(markdown_file, 'w') as file:
             file.write(md_content)
 
-        print(f"Gherkin scenario saved to {markdown_file}")
+        st.success(f"Gherkin scenario saved to {markdown_file}")
 
     except Exception as ex:
-        print(f"Error in saving Gherkin to Markdown: {ex}")
+        st.error(f"Error in saving Gherkin to Markdown: {ex}")
 
-def edit_scenarios(scenarios, user_input):
-    try:
-        if scenarios:
-            edit_choice = input("Do you want to search for similar scenarios? (yes/no): ").lower()
-            found_similar_scenario = False
-            if edit_choice == "yes":
-                # query = input("Enter the scenario text to find similar scenarios: ").strip()
-                similar_scenarios = search_similar_scenarios(user_input)
+def edit_scenarios(project_name, input_text):
+    similar_scenarios = search_similar_scenarios(input_text)
+    found_similar_scenario = False
 
-                for hit in similar_scenarios:
-                    if hit.score >= 0.70:
-                        gherkin_scenario = hit.payload['gherkin_scenario']
-                        formatted_scenario = format_gherkin_scenario(gherkin_scenario)
-                        print(f"Similarity Score: {hit.score}\nScenario:\n{formatted_scenario}")
-                        found_similar_scenario = True
+    for hit in similar_scenarios:
+        if hit.score >= 0.70:
+            gherkin_scenario = hit.payload['gherkin_scenario']
+            formatted_scenario = format_gherkin_scenario(gherkin_scenario)
+            st.write(f"Similarity Score: {hit.score}")
+            st.text_area("Similar Scenario:", value=formatted_scenario, height=300)
+            found_similar_scenario = True
 
-                    if not found_similar_scenario:
-                        print("There are no similar scenarios.")
-                edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
-            else:
-                edit_instructions = input("Enter editing instructions in plain text (e.g., 'Keep scenarios 1 and 2. Delete scenarios 3 and 4. Modify scenario 5 to ...'): ").strip()
+    if not found_similar_scenario:
+        st.write("There are no similar scenarios.")
 
-            modified_scenarios = modify_gherkin_scenario(scenarios, edit_instructions)
-            
-            if modified_scenarios:
-                return modified_scenarios
-            else:
-                print("Failed to modify scenarios.")
-                return scenarios
+    edit_instructions = st.text_area("Enter editing instructions:", height=100)
+
+    if st.button("Edit"):
+        modified_gherkin_scenario = modify_gherkin_scenario(st.session_state['gherkin_output_scenarios'], edit_instructions)
+        if modified_gherkin_scenario:
+            st.session_state['modified_gherkin_scenario'] = modified_gherkin_scenario
+            st.success("Modified Scenarios:")
+            st.text_area("Modified Gherkin Scenarios:", value=modified_gherkin_scenario, height=300)
         else:
-            print("No scenarios to edit.")
-            return None
-    
-    except Exception as ex:
-        print(f"Error editing scenarios: {ex}")
-        return None
-    
+            st.error("Failed to modify scenarios.")
+    else:
+        modified_gherkin_scenario = st.session_state.get('modified_gherkin_scenario', None)
+
+    return modified_gherkin_scenario
+
 def format_gherkin_scenario(gherkin_scenario):
     formatted_lines = []
     lines = gherkin_scenario.splitlines()
