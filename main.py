@@ -28,8 +28,8 @@ if __name__ == "__main__":
                     save_choice = input("Do you want to save the modified scenarios? (yes/no): ").lower()
                     if save_choice == "yes":
                         filename = input("Enter the filename to save the modified Gherkin scenario (e.g., user_story.feature): ")
-                        save_gherkin_scenarios_to_markdown(modified_scenarios, filename, project_name)
-                        print(f"Modified scenarios saved to 'Projects/{project_name}/{filename}'")
+                        # save_gherkin_scenarios_to_markdown(modified_scenarios, filename, project_name)
+                        # print(f"Modified scenarios saved to 'Projects/{project_name}/{filename}'")
                         save_scenario_to_qdrant(project_name, input_text, modified_scenarios)
                         break
                     else:
@@ -40,8 +40,8 @@ if __name__ == "__main__":
                     break
         else:
             filename = input("Enter the filename to save the Gherkin scenario (e.g., user_story.feature): ")
-            save_gherkin_scenarios_to_markdown(gherkin_output_scenarios, filename, project_name)
-            print(f"Scenarios saved to 'Projects/{project_name}/{filename}'")
+            # save_gherkin_scenarios_to_markdown(gherkin_output_scenarios, filename, project_name)
+            # print(f"Scenarios saved to 'Projects/{project_name}/{filename}'")
             save_scenario_to_qdrant(project_name, input_text, gherkin_output_scenarios)
     else:
         print("Failed to generate Gherkin.")
