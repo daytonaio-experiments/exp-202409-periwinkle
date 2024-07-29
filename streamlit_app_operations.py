@@ -11,9 +11,6 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, project_name):
             os.makedirs(base_directory)
         
         project_directory = os.path.join(base_directory, project_name)
-        
-        if not os.path.exists(project_directory):
-            os.makedirs(project_directory)
 
         gherkin_text = gherkin_text.replace("```gherkin", "").replace("```", "").strip()
 
@@ -49,9 +46,10 @@ def save_gherkin_scenarios_to_markdown(gherkin_text, filename, project_name):
     except Exception as ex:
         st.error(f"Error in saving Gherkin to Markdown: {ex}")
 
-def edit_scenarios(project_name, input_text):
+def edit_scenarios(scenarios, input_text):
     similar_scenarios = search_similar_scenarios(input_text)
     found_similar_scenario = False
+    modified_gherkin_scenario = None
 
     for hit in similar_scenarios:
         if hit.score >= 0.70:
@@ -67,15 +65,8 @@ def edit_scenarios(project_name, input_text):
     edit_instructions = st.text_area("Enter editing instructions:", height=100)
 
     if st.button("Edit"):
-        modified_gherkin_scenario = modify_gherkin_scenario(st.session_state['gherkin_output_scenarios'], edit_instructions)
-        if modified_gherkin_scenario:
-            st.session_state['modified_gherkin_scenario'] = modified_gherkin_scenario
-            st.success("Modified Scenarios:")
-            st.text_area("Modified Gherkin Scenarios:", value=modified_gherkin_scenario, height=300)
-        else:
-            st.error("Failed to modify scenarios.")
-    else:
-        modified_gherkin_scenario = st.session_state.get('modified_gherkin_scenario', None)
+        modified_gherkin_scenario = modify_gherkin_scenario(scenarios, edit_instructions)
+        st.session_state['modified_gherkin_scenario'] = modified_gherkin_scenario
 
     return modified_gherkin_scenario
 

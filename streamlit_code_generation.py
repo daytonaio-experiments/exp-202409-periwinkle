@@ -1,6 +1,7 @@
 import os
 import re
 from azure_openai_conversion import code_generation_assistant
+import streamlit as st
 
 def load_gherkin_scenarios(project_name, feature_filename):
     gherkin_file_path = f'Projects/{project_name}/{feature_filename}'
@@ -41,18 +42,18 @@ def generate_code(project_name, feature_filename):
     gherkin_scenarios = load_gherkin_scenarios(project_name, feature_filename)
     
     if gherkin_scenarios:
-        tech_stack = input("Enter tech stack:\n") # Only entered: Technology stack: Backend Language: Python, Backend Framework: Django, Frontend Language: JavaScript, Frontend Framework: React
+        tech_stack = st.text_input("Enter tech stack:\n") # Only entered: Technology stack: Backend Language: Python, Backend Framework: Django, Frontend Language: JavaScript, Frontend Framework: React
         
+    if st.button("Generate Code"):
         try:
             code = code_generation_assistant(tech_stack, gherkin_scenarios)
             
             if code:
                 feature_name = os.path.splitext(feature_filename)[0]
                 save_code_to_files(project_name, feature_name, code)
+                st.success("Code generated and saved successfully.")
             else:
                 print("Failed to generate code.")
         except Exception as ex:
-            print(f"Error in generating code: {ex}")
-    else:
-        print("Failed to load Gherkin scenarios.")
+            st.error(f"Error in generating code: {ex}")
 
