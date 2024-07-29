@@ -2,6 +2,7 @@ from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 import random as lrandom
 from typing import List
+import os
 
 qdrant_client = QdrantClient(host="localhost", port=6333)
 encoder = SentenceTransformer('BAAI/bge-small-en')
@@ -9,7 +10,7 @@ encoder = SentenceTransformer('BAAI/bge-small-en')
 collection_name = "scenarios"
 
 def create_scenarios_collection():
-    if not qdrant_client.check_collection_exists(collection_name):
+    if not qdrant_client.collection_exists(collection_name):
         qdrant_client.create_collection(
             collection_name=collection_name,
             vectors_config=models.VectorParams(size=encoder.get_sentence_embedding_dimension(), distance=models.Distance.COSINE)
@@ -87,7 +88,24 @@ def save_scenarios_to_qdrant(scenarios: List[str], embeddings: List[List[float]]
     print(f"{len(scenarios)} scenarios saved to Qdrant with embeddings.")
 
 
-# file_path = './GameDev/shop_for_avatar.feature'
+# file_path = './Projects/Dentist/doctor_contact.feature'
 # gherkin_scenarios = read_feature_file(file_path)
 # embeddings = generate_embeddings(gherkin_scenarios)
 # save_scenarios_to_qdrant(gherkin_scenarios, embeddings)
+
+def process_projects_folder(root_folder):
+    create_scenarios_collection()
+
+    for foldername, subfolders, filenames in os.walk(root_folder):
+        for filename in filenames:
+            if filename.endswith('.feature'):
+                file_path = os.path.join(foldername, filename)
+                print(f'Processing: {file_path}')
+                
+                gherkin_scenarios = read_feature_file(file_path)
+                embeddings = generate_embeddings(gherkin_scenarios)
+                save_scenarios_to_qdrant(gherkin_scenarios, embeddings)
+
+if __name__ == "__main__":
+    projects_folder = './Projects'
+    process_projects_folder(projects_folder)

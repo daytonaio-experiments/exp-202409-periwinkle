@@ -73,3 +73,37 @@ def modify_gherkin_scenario(scenarios, edit_instructions):
     except Exception as ex:
         print(f"Error in modifying scenarios: {ex}")
         return None
+    
+def code_generation_assistant(tech_stack, scenarios):
+    try:
+        prompt = (
+            "You are an expert in generating code based on Gherkin scenarios. Your task is to generate code that implements "
+            "the functionality described in the following Gherkin scenarios. The generated code should be compatible with the provided technology stack."
+            "Please ensure that the generated code is complete and is ready to be integrated into a project.\n\n"
+            "Here are the Gherkin scenarios:\n"
+            f"{scenarios}\n\n"
+            "Technology stack:\n"
+            f"{tech_stack}\n\n"
+            "Please generate the code based on the above scenarios and technology stack."
+        )
+
+        response = client.chat.completions.create(
+            model=deployment,
+            messages=[
+                {"role": "system", "content": "You are an AI assistant specialized in code generation from Gherkin scenarios. "
+                                              "Your task is to generate code based on the provided Gherkin scenarios and technology "
+                                              "stack. Ensure that the code is structured well and is compatible "
+                                              "with the specified technology stack."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.6,
+            max_tokens=4096,
+        )
+
+        project_code = response.choices[0].message.content.strip()
+        return project_code
+
+
+    except Exception as ex:
+        print(f"Error in generating code: {ex}")
+        return None
