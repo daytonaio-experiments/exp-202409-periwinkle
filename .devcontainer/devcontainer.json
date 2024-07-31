@@ -1,0 +1,25 @@
+{
+  "name": "Django and React Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "extensions": [
+      "ms-python.python",
+      "ms-azuretools.vscode-docker",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
+    ],
+    "vscode": {
+      "settings": {
+        "python.pythonPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.linting.flake8Enabled": true,
+        "eslint.format.enable": true,
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "postCreateCommand": "cd backend && pip install -r requirements.txt"
+}
