@@ -1,25 +1,27 @@
 {
-  "name": "Django and React Dev Container",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "web",
-  "workspaceFolder": "/workspace",
+  "name": "Python 3 with Streamlit and Qdrant",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "customizations": {
-    "extensions": [
-      "ms-python.python",
-      "ms-azuretools.vscode-docker",
-      "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode"
-    ],
     "vscode": {
       "settings": {
-        "python.pythonPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/usr/local/bin/python3",
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
-        "python.linting.flake8Enabled": true,
-        "eslint.format.enable": true,
-        "editor.formatOnSave": true
-      }
+        "python.formatting.provider": "black"
+      },
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.isort",
+        "njpwerner.autodocstring"
+      ]
     }
   },
-  "postCreateCommand": "cd backend && pip install -r requirements.txt"
+  "postCreateCommand": "pip3 install -r requirements.txt",
+  "postAttachCommand": "/workspace/start.sh",
+  "forwardPorts": [8501, 6333],
+  "features": {
+    "docker-in-docker": "latest"
+  }
 }
