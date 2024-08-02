@@ -19,26 +19,25 @@ def convert_user_input_text_to_gherkin(text):
     try:
 
         prompt = (
-            "Generate multiple BDD scenarios in Gherkin syntax based on the following text.\n"
+            "Generate multiple BDD scenarios in Gherkin syntax in `.feature` format based on the following text:\n"
             f"Text: {text}\n"
-            "Ensure each scenario includes clear Feature, Scenario, Given, When, Then, and "
-            "optionally And/But statements."
-            "To enhance readability, please number each scenario."
-        )
+            "Each scenario should include Feature, Scenario, Given, When, Then, and optionally And/But statements. "
+            "Ensure scenarios are numbered and formatted properly in `.feature` style. "
+            "Avoid any additional explanatory text or sentences, and do not include the `feature` keyword or any other headers."
+            )
 
         response = client.chat.completions.create(
-            model=deployment,
-            messages=[
-                {"role": "system", "content": "You are an AI assistant specialized in "
-                  "generating BDD scenarios. Your task is to convert given business requirements, "
-                  "often presented as User Stories, into multiple BDD Given-When-Then scenarios. "
-                  "Ensure each scenario includes clear Feature, Scenario, Given, When, Then, and "
-                  "optionally And/But statements to accurately represent the user's intent."},
-                {"role": "user", "content": prompt}
+        model=deployment,
+        messages=[
+            {"role": "system", "content": "You are an AI assistant specialized in generating BDD scenarios. "
+            "Your task is to convert business requirements into BDD Given-When-Then scenarios using Gherkin syntax in `.feature` format. "
+            "Ensure each scenario includes Feature, Scenario, Given, When, Then, and optionally And/But statements. "
+            "Output should be in plain Gherkin syntax, formatted as `.feature` content but without the `feature` keyword or any other headers, and contain only the BDD scenarios without any additional explanatory text or sentences."},
+            {"role": "user", "content": prompt}
             ],
-            temperature=0.6,
-            max_tokens=2000,
-        )
+        temperature=0.6,
+        max_tokens=2000,
+    )
 
         gherkin_scenarios = response.choices[0].message.content.strip()
         return gherkin_scenarios
@@ -50,17 +49,19 @@ def convert_user_input_text_to_gherkin(text):
 def modify_gherkin_scenario(scenarios, edit_instructions):
     try:
         prompt = (
-            f"Modify the following Gherkin scenarios: \n {scenarios} based on these instructions:\n"
-            f"Instructions: {edit_instructions}"
-             "After modifying, removing and keeping scenarios please also number each scenario. \n"
+            f"Modify the following Gherkin scenarios:\n{scenarios}\n"
+        f"Based on these instructions:\n{edit_instructions}\n"
+        "After modifying, removing, or keeping scenarios, number each scenario. "
+        "Ensure that the output contains only the modified scenarios in Gherkin syntax without any additional comments or explanations."
         )
 
         response = client.chat.completions.create(
             model=deployment,
             messages=[
-                {"role": "system", "content": "You are an AI assistant specialized in "
-                                              "editing BDD scenarios. Your task is to modify given Gherkin scenarios "
-                                              "based on user instructions."},
+                {"role": "system", "content": "You are an AI assistant specialized in editing BDD scenarios. "
+                    "Your task is to modify the provided Gherkin scenarios based on the given instructions. "
+                    "Ensure that each scenario is numbered and that the output includes only the modified scenarios in Gherkin syntax. "
+                    "Do not include any additional comments, explanations, or headers."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.6,

@@ -1,0 +1,27 @@
+{
+  "name": "Python 3 with Streamlit and Qdrant",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black"
+      },
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.isort",
+        "njpwerner.autodocstring"
+      ]
+    }
+  },
+  "postCreateCommand": "pip3 install -r requirements.txt",
+  "postAttachCommand": "/workspace/start.sh",
+  "forwardPorts": [8501, 6333],
+  "features": {
+    "docker-in-docker": "latest"
+  }
+}

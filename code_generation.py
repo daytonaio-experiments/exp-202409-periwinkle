@@ -41,7 +41,7 @@ def generate_code(project_name, feature_filename):
     gherkin_scenarios = load_gherkin_scenarios(project_name, feature_filename)
     
     if gherkin_scenarios:
-        tech_stack = input("Enter tech stack:\n") # Only entered: Technology stack: Backend Language: Python, Backend Framework: Django, Frontend Language: JavaScript, Frontend Framework: React
+        tech_stack = "Backend Language: Python, Backend Framework: Django, Frontend Language: JavaScript, Frontend Framework: React"
         
         try:
             code = code_generation_assistant(tech_stack, gherkin_scenarios)

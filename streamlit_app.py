@@ -42,7 +42,7 @@ def previous_step():
 
 def next_button(step):
     if st.button("Next", key=f"next_{step}"):
-        st.session_state['step'] += 1
+        next_step()
 
 def step1():
 
@@ -60,9 +60,8 @@ def step1():
                 st.success(f"Project '{project_name}' created.")
                 next_step()
     else:
-        if st.button("Next", key="next"):
-            st.session_state['project_name'] = project_choice
-            next_step()
+        st.session_state['project_name'] = project_choice
+        next_button(1)
 
 def step2():
     st.header("Step 2: User Story Input")
@@ -80,7 +79,7 @@ def step2():
                 gherkin_output_scenarios = convert_user_input_text_to_gherkin(input_text)
                 if gherkin_output_scenarios:
                     st.success("Generated Gherkin Scenarios:")
-                    st.text_area("Gherkin Scenarios:", value=gherkin_output_scenarios, height=300)
+                    st.text_area("Gherkin Scenarios:", value=gherkin_output_scenarios, height=500)
                     st.session_state['gherkin_output_scenarios'] = gherkin_output_scenarios
                 else:
                     st.error("Failed to generate Gherkin.")
@@ -122,10 +121,8 @@ def step4():
 
             if st.session_state['modified_gherkin_scenario']:
                 scenarios_to_save = st.session_state['modified_gherkin_scenario']
-                st.write(f"Modified Gherkin Scenarios:\n{scenarios_to_save}")
             else:
                 scenarios_to_save = st.session_state['gherkin_output_scenarios']
-                st.write(f"Original Gherkin Scenarios:\n{scenarios_to_save}")
 
             save_gherkin_scenarios_to_markdown(scenarios_to_save, filename, project_name)
             save_scenario_to_qdrant(project_name, input_text, scenarios_to_save)
