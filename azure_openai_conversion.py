@@ -23,6 +23,7 @@ def convert_user_input_text_to_gherkin(text):
             f"Text: {text}\n"
             "Each scenario should include Feature, Scenario, Given, When, Then, and optionally And/But statements. "
             "Ensure scenarios are numbered and formatted properly in `.feature` style. "
+            "Ensure that after deletion, the remaining scenarios are renumbered sequentially. "
             "Avoid any additional explanatory text or sentences, and do not include the `feature` keyword or any other headers."
             )
 
@@ -50,9 +51,11 @@ def modify_gherkin_scenario(scenarios, edit_instructions):
     try:
         prompt = (
             f"Modify the following Gherkin scenarios:\n{scenarios}\n"
-        f"Based on these instructions:\n{edit_instructions}\n"
-        "After modifying, removing, or keeping scenarios, number each scenario. "
-        "Ensure that the output contains only the modified scenarios in Gherkin syntax without any additional comments or explanations."
+            f"Based on these instructions:\n{edit_instructions}\n"
+            "Do not delete any scenarios unless explicitly instructed. "
+            "If you are not instructed to remove,delete any scenario. "
+            "Make sure to include all the provided scenarios in the output. "
+            "Number each scenario and ensure that the output contains only the modified scenarios in Gherkin syntax without any additional explanations."       
         )
 
         response = client.chat.completions.create(
@@ -60,8 +63,9 @@ def modify_gherkin_scenario(scenarios, edit_instructions):
             messages=[
                 {"role": "system", "content": "You are an AI assistant specialized in editing BDD scenarios. "
                     "Your task is to modify the provided Gherkin scenarios based on the given instructions. "
-                    "Ensure that each scenario is numbered and that the output includes only the modified scenarios in Gherkin syntax. "
-                    "Do not include any additional comments, explanations, or headers."},
+                    "Ensure that each scenario is numbered in corect order after mof=dification and that the output includes all provided scenarios in Gherkin syntax, "
+                    "only modifying those as instructed. Do not include any explanations."
+                    "Do not delete any scenarios unless explicitly instructed."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.6,
